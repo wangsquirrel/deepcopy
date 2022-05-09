@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
-	"reflect"
 	"testing"
 
 	"github.com/bytedance/sonic"
@@ -18,7 +17,27 @@ func TestCopy(t *testing.T) {
 	err := DeepCopy(&src, &b)
 	assert.Equal(t, src, b)
 	assert.Nil(t, err)
-	reflect.TypeOf(b)
+}
+
+func TestCopyParallel(t *testing.T) {
+	t.Parallel()
+	go func() {
+		for i := 0; i < 100; i++ {
+			b := Basics{}
+			err := DeepCopy(&src, &b)
+			assert.Equal(t, src, b)
+			assert.Nil(t, err)
+		}
+	}()
+
+	go func() {
+		for i := 0; i < 100; i++ {
+			b := BasicsJson{}
+			err := DeepCopy(&srcJson, &b)
+			assert.Equal(t, src, b)
+			assert.Nil(t, err)
+		}
+	}()
 }
 
 func Benchmark_Copy(b *testing.B) {
@@ -168,6 +187,7 @@ type Basics struct {
 	Complex64s  []complex64
 	Complex128  complex128
 	Complex128s []complex128
+	Map         map[int]int
 	Interface   interface{}
 	Interfaces  []interface{}
 }
@@ -244,6 +264,7 @@ var src = Basics{
 	Complex64s:  []complex64{complex64(-65 + 11i), complex64(66 + 10i)},
 	Complex128:  complex128(-128 + 12i),
 	Complex128s: []complex128{complex128(-128 + 11i), complex128(129 + 10i)},
+	Map:         map[int]int{1: 2, 3: 4, 5: 6, 7: 8, 9: 10},
 	Interfaces:  []interface{}{42, true, "pan-galactic", '3', []float32{32.32, 33}},
 }
 
@@ -280,32 +301,4 @@ var srcJson = BasicsJson{
 	Float64:    64.1,
 	Float64s:   []float64{64, 65, 66},
 	Interfaces: []interface{}{42, true, "pan-galactic", '3', []float32{32.32, 33}},
-}
-
-type testData struct {
-	Int64  int64    `json:"int_64"`
-	Int32  int32    `json:"int_32"`
-	Int16  int8     `json:"int_16"`
-	Int8   int8     `json:"int_8"`
-	UInt8  int8     `json:"u_int_8"`
-	UInt64 uint64   `json:"u_int_64"`
-	UInt32 uint32   `json:"u_int_32"`
-	UInt16 uint8    `json:"u_int_16"`
-	S      string   `json:"s"`
-	Slice  []string `json:"slice"`
-	Array  []int    `json:"array"`
-}
-
-var td = testData{
-	Int64:  64,
-	Int32:  32,
-	Int16:  16,
-	Int8:   8,
-	UInt8:  18,
-	UInt64: 164,
-	UInt32: 132,
-	UInt16: 116,
-	S:      "test deepcopy",
-	Slice:  []string{"123", "456", "789"},
-	Array:  []int{0x33, 0x44, 0x55, 0x66, 0x77, 0x88},
 }
