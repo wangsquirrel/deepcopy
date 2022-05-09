@@ -1,4 +1,5 @@
 # DeepCopy
+[![codecov](https://codecov.io/gh/wangsquirrel/deepcopy/branch/main/graph/badge.svg?token=ZPW283W4QV)](https://codecov.io/gh/wangsquirrel/deepcopy)
 
 ## Usage
 
