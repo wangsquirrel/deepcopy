@@ -15,9 +15,7 @@ type structCopier struct {
 
 func (s *structCopier) Copy(src, ptr unsafe.Pointer) {
 	for i := 0; i < s.numField; i++ {
-		//根据struct ptr获取成员的ptr
 		fieldPtr := s.fieldTypes[i].UnsafeGet(ptr)
-		//根据*struct interface{}获取src的成员的指针的interface{}
 		s.copiers[i].Copy(s.fieldTypes[i].UnsafeGet(src), fieldPtr)
 	}
 }

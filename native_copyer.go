@@ -125,45 +125,64 @@ func (*trivalCopier) Copy(src unsafe.Pointer, dst unsafe.Pointer) {
 func createCopierOfNative(typ reflect2.Type) Copier {
 	switch typ.Kind() {
 	case reflect.Bool:
-		return &boolCopier{}
+		return _boolCopier
 	case reflect.Int:
-		return &intCopier{}
+		return _intCopier
 	case reflect.Int8:
-		return &int8Copier{}
+		return _int8Copier
 	case reflect.Int16:
-		return &int16Copier{}
+		return _int16Copier
 	case reflect.Int32:
-		return &int32Copier{}
+		return _int32Copier
 	case reflect.Int64:
-		return &int64Copier{}
+		return _int64Copier
 	case reflect.Uint:
-		return &uintCopier{}
+		return _uintCopier
 	case reflect.Uint8:
-		return &uint8Copier{}
+		return _uint8Copier
 	case reflect.Uint16:
-		return &uint16Copier{}
+		return _uint16Copier
 	case reflect.Uint32:
-		return &uint32Copier{}
+		return _uint32Copier
 	case reflect.Uint64:
-		return &uint64Copier{}
+		return _uint64Copier
 	case reflect.Uintptr:
-		return &uintptrCopier{}
+		return _uintptrCopier
 	case reflect.Float32:
-		return &float32Copier{}
+		return _float32Copier
 	case reflect.Float64:
-		return &float64Copier{}
+		return _float64Copier
 	case reflect.Complex64:
-		return &complex64Copier{}
+		return _complex64Copier
 	case reflect.Complex128:
-		return &complex128Copier{}
+		return _complex128Copier
 	case reflect.String:
-		return &stringCopier{}
+		return _stringCopier
 	case reflect.Func:
-		return &funcCopier{}
+		return _funcCopier
 	case reflect.UnsafePointer, reflect.Chan: // Chan and unsafe.Pointer are not deep copied
-		return &trivalCopier{}
+		return _trivalCopier
 	default:
-		// impossible
 		return nil
 	}
 }
+
+var _boolCopier = &boolCopier{}
+var _intCopier = &intCopier{}
+var _int8Copier = &int8Copier{}
+var _int16Copier = &int16Copier{}
+var _int32Copier = &int32Copier{}
+var _int64Copier = &int64Copier{}
+var _uintCopier = &uintCopier{}
+var _uint8Copier = &uint8Copier{}
+var _uint16Copier = &uint16Copier{}
+var _uint32Copier = &uint32Copier{}
+var _uint64Copier = &uint64Copier{}
+var _uintptrCopier = &uintptrCopier{}
+var _float32Copier = &float32Copier{}
+var _float64Copier = &float64Copier{}
+var _complex64Copier = &complex64Copier{}
+var _complex128Copier = &complex128Copier{}
+var _stringCopier = &stringCopier{}
+var _funcCopier = &funcCopier{}
+var _trivalCopier = &trivalCopier{}

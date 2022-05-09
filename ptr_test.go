@@ -15,12 +15,19 @@ type S struct {
 	N *string
 }
 
-func TestPtrCopy1(t *testing.T) {
+type S1 struct {
+	a int
+}
 
-	x := "7777777777777777"
-	a := &x
-	var b *string
+func TestPtrPtrCopy(t *testing.T) {
+
+	x := S1{7}
+	y := &x
+	var a **S1 = &y
+	var b **S1
 	DeepCopy(&a, &b)
+	assert.Equal(t, **a, **b)
+	assert.Equal(t, *a, *b)
 	assert.Equal(t, a, b)
 }
 
@@ -31,6 +38,7 @@ func TestPtrCopy(t *testing.T) {
 	b := (*S)(nil)
 	DeepCopy(&a, &b)
 	assert.Equal(t, a, b)
+	assert.Equal(t, *a, *b)
 }
 
 func BenchmarkPtrCopy(b *testing.B) {

@@ -31,14 +31,14 @@ type Copier interface {
 	Copy(src unsafe.Pointer, dst unsafe.Pointer)
 }
 
-var copiers = sync.Map{}
+var copiers = &sync.Map{}
 
 func CopierOf(typ reflect2.Type) Copier {
 	if c, ok := copiers.Load(typ); ok {
 		return c.(Copier)
 	}
 	c := createCopierOf(typ)
-	//println("create copier of", typ.String())
+	//println("create copier of ", typ.String())
 	copiers.Store(typ, c)
 	return c
 
@@ -50,11 +50,11 @@ func createCopierOf(typ reflect2.Type) Copier {
 	if c != nil {
 		return c
 	}
-	c = createCopierOfSlice(typ)
+	c = createCopierOfStruct(typ)
 	if c != nil {
 		return c
 	}
-	c = createCopierOfStruct(typ)
+	c = createCopierOfSlice(typ)
 	if c != nil {
 		return c
 	}
@@ -78,5 +78,6 @@ func createCopierOf(typ reflect2.Type) Copier {
 	if c != nil {
 		return c
 	}
+	// impossible
 	return nil
 }

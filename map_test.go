@@ -16,7 +16,7 @@ type AA struct {
 func TestMapCopy(t *testing.T) {
 	a := AA{
 		M: map[string]string{"1": "2", "3": "4"},
-		N: map[int][]bool{1: []bool{true, false, true}},
+		N: map[int][]bool{1: {true, false, true}},
 	}
 	var b AA = AA{}
 	DeepCopy(&a, &b)

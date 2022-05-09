@@ -3,7 +3,6 @@ module github.com/wangsquirrel/deepcopy
 go 1.17
 
 require (
-	github.com/antlabs/deepcopy v0.0.5
 	github.com/bytedance/sonic v1.2.1
 	github.com/google/go-cpy v0.0.0-20211218193943-a9c933c06932
 	github.com/modern-go/reflect2 v1.0.2
