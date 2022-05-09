@@ -1,6 +1,6 @@
 # DeepCopy
 
-# Usage
+## Usage
 
 ```golang
 var a string = "a"

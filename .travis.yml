@@ -1,0 +1,21 @@
+language: go 
+go: 
+  - 1.17.X  # 版本号, 支持多种版本号
+
+
+os:            
+  - linux
+
+
+before_install: 
+  - go mod tidy
+
+install: true
+
+script: # 脚本执行.
+  - echo "run"
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
+  - go test -v ./...
+
+after_success: 
+  - bash <(curl -s https://codecov.io/bash)
