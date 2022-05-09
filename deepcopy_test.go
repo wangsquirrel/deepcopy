@@ -21,14 +21,14 @@ func TestCopy(t *testing.T) {
 	reflect.TypeOf(b)
 }
 
-func BenchmarkCopy(b *testing.B) {
+func Benchmark_Copy(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		var dst BasicsJson
 		DeepCopy(&srcJson, &dst)
 	}
 }
 
-func BenchmarkSonicCopy(b *testing.B) {
+func Benchmark_SonicCopy(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		bb, _ := sonic.Marshal(srcJson)
@@ -38,7 +38,7 @@ func BenchmarkSonicCopy(b *testing.B) {
 	}
 }
 
-func BenchmarkGOBCopy(b *testing.B) {
+func Benchmark_GOBCopy(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		var dst BasicsJson
 		var buf bytes.Buffer
@@ -52,7 +52,7 @@ func BenchmarkGOBCopy(b *testing.B) {
 	}
 }
 
-func BenchmarkReflectCopy(b *testing.B) {
+func Benchmark_ReflectCopy(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		dst := deepcopy.Copy(srcJson).(BasicsJson)
 		if !dst.Bool {
@@ -60,7 +60,7 @@ func BenchmarkReflectCopy(b *testing.B) {
 		}
 	}
 }
-func BenchmarkJsonCopy(b *testing.B) {
+func Benchmark_JsonCopy(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		dst := &BasicsJson{}
 		bb, err := json.Marshal(srcJson)
@@ -77,16 +77,7 @@ func BenchmarkJsonCopy(b *testing.B) {
 	}
 }
 
-func BenchmarkRawCopy(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		dst := Custom()
-		if !dst.Bool {
-			b.Error("reflect deep copy failed")
-		}
-	}
-}
-
-func BenchmarkCPYCopy(b *testing.B) {
+func Benchmark_CPYCopy(b *testing.B) {
 	var copier = cpy.New(cpy.IgnoreAllUnexported())
 
 	for i := 0; i < b.N; i++ {
@@ -96,7 +87,14 @@ func BenchmarkCPYCopy(b *testing.B) {
 		}
 	}
 }
-
+func Benchmark_RawCopy(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		dst := Custom()
+		if !dst.Bool {
+			b.Error("reflect deep copy failed")
+		}
+	}
+}
 func Custom() BasicsJson {
 	dst := BasicsJson{String: "kimchi",
 		Strings:    []string{"uni", "ika"},
@@ -282,4 +280,32 @@ var srcJson = BasicsJson{
 	Float64:    64.1,
 	Float64s:   []float64{64, 65, 66},
 	Interfaces: []interface{}{42, true, "pan-galactic", '3', []float32{32.32, 33}},
+}
+
+type testData struct {
+	Int64  int64    `json:"int_64"`
+	Int32  int32    `json:"int_32"`
+	Int16  int8     `json:"int_16"`
+	Int8   int8     `json:"int_8"`
+	UInt8  int8     `json:"u_int_8"`
+	UInt64 uint64   `json:"u_int_64"`
+	UInt32 uint32   `json:"u_int_32"`
+	UInt16 uint8    `json:"u_int_16"`
+	S      string   `json:"s"`
+	Slice  []string `json:"slice"`
+	Array  []int    `json:"array"`
+}
+
+var td = testData{
+	Int64:  64,
+	Int32:  32,
+	Int16:  16,
+	Int8:   8,
+	UInt8:  18,
+	UInt64: 164,
+	UInt32: 132,
+	UInt16: 116,
+	S:      "test deepcopy",
+	Slice:  []string{"123", "456", "789"},
+	Array:  []int{0x33, 0x44, 0x55, 0x66, 0x77, 0x88},
 }

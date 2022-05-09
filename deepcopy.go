@@ -38,7 +38,7 @@ func CopierOf(typ reflect2.Type) Copier {
 		return c.(Copier)
 	}
 	c := createCopierOf(typ)
-	println("create copier of", typ.String())
+	//println("create copier of", typ.String())
 	copiers.Store(typ, c)
 	return c
 
