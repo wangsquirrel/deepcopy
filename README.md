@@ -1,5 +1,5 @@
 # DeepCopy
-![Build and Test](https://github.com/wangsquirrel/deepcopy/workflows/go/badge.svg?branch=master&event=push)
+![example workflow](https://github.com/wangsquirrel/deepcopy/actions/workflows/main.yml/badge.svg)
 [![codecov](https://codecov.io/gh/wangsquirrel/deepcopy/branch/main/graph/badge.svg?token=ZPW283W4QV)](https://codecov.io/gh/wangsquirrel/deepcopy)
 
 
