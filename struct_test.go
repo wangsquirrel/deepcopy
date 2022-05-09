@@ -24,7 +24,7 @@ type ST2 struct {
 func TestStructCopy(t *testing.T) {
 	a := ST{5, ST2{2, []int{1, 2, 3, 4, 5, 6, 7}, "iiiiiiiiiiiiiiiiiiiii"}, 1000000, "RRRRRRRRRR", []string{"x", "z", "b", "c", "b", "c", "a", "b", "c"}}
 	b := ST{}
-	Deepcopy(&a, &b)
+	DeepCopy(&a, &b)
 	assert.Equal(t, a, b)
 }
 
@@ -36,15 +36,16 @@ func BenchmarkRawStructCopy(b *testing.B) {
 
 	}
 }
+
 func BenchmarkStructCopy(b *testing.B) {
 	a := ST{5, ST2{2, []int{1, 2, 3, 4, 5, 6, 7}, "iiiiiiiiiiiiiiiiiiiii"}, 1000000, "RRRRRRRRRR", []string{"x", "z", "b", "c", "b", "c", "a", "b", "c"}}
 	for i := 0; i < b.N; i++ {
 		b := ST{}
-		Deepcopy(&a, &b)
+		DeepCopy(&a, &b)
 	}
 }
 
-func BenchmarkStandardStructCopy(b *testing.B) {
+func BenchmarkMohaeStructCopy(b *testing.B) {
 	a := ST{5, ST2{2, []int{1, 2, 3, 4, 5, 6, 7}, "iiiiiiiiiiiiiiiiiiiii"}, 1000000, "RRRRRRRRRR", []string{"x", "z", "b", "c", "b", "c", "a", "b", "c"}}
 
 	for i := 0; i < b.N; i++ {
@@ -58,6 +59,5 @@ func BenchmarkSonicStructCopy(b *testing.B) {
 		bb, _ := sonic.Marshal(a)
 		y := ST{}
 		_ = sonic.Unmarshal(bb, &y)
-
 	}
 }

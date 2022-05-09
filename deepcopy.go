@@ -1,28 +1,47 @@
 package deepcopy
 
 import (
-	"reflect"
+	"fmt"
+	"sync"
 	"unsafe"
 
 	"github.com/modern-go/reflect2"
 )
 
-type Copier interface {
-	// src must be pointer type
-	Copy(src interface{}, ptr unsafe.Pointer)
+// DeepCopy copies the data pointed by src to dst
+// both src and dst myst be pointers
+func DeepCopy(src interface{}, dst interface{}) error {
+	dstType := reflect2.TypeOf(dst)
+	srcType := reflect2.TypeOf(src)
+	if srcType != dstType {
+		return fmt.Errorf("can not copy objects of different types(%v, %v)", srcType, dstType)
+	}
+	ptrType := dstType.(*reflect2.UnsafePtrType)
+	copier := CopierOf(ptrType.Elem())
+	if copier == nil {
+		return fmt.Errorf("object of type %s can not be copied", dstType)
+	}
+	copier.Copy(reflect2.PtrOf(src), reflect2.PtrOf(dst))
+	return nil
 }
 
-var copiers = map[reflect2.Type]Copier{}
+type Copier interface {
+	// Copy copies the data pointed by src to dst
+	// src and dst must be pointer type and they points to the objects of the same type
+	Copy(src unsafe.Pointer, dst unsafe.Pointer)
+}
+
+var copiers = sync.Map{}
 
 func CopierOf(typ reflect2.Type) Copier {
-	if c, ok := copiers[typ]; ok {
-		return c
+	if c, ok := copiers.Load(typ); ok {
+		return c.(Copier)
 	}
-
 	c := createCopierOf(typ)
 	println("create copier of", typ.String())
-	copiers[typ] = c
+	copiers.Store(typ, c)
 	return c
+
 }
 
 func createCopierOf(typ reflect2.Type) Copier {
@@ -39,27 +58,25 @@ func createCopierOf(typ reflect2.Type) Copier {
 	if c != nil {
 		return c
 	}
-	return nil
-}
-
-func createCopierOfSlice(typ reflect2.Type) Copier {
-	if typ.Kind() != reflect.Slice {
-		return nil
+	c = createCopierOfMap(typ)
+	if c != nil {
+		return c
 	}
-	sliceType := typ.(*reflect2.UnsafeSliceType)
-	elemCopier := CopierOf(sliceType.Elem())
-	if elemCopier == nil {
-		return nil
+	c = createCopierOfPtr(typ)
+	if c != nil {
+		return c
 	}
-	return &sliceCopier{sliceType, elemCopier}
-}
-
-func Deepcopy(src interface{}, dst interface{}) error {
-	typ := reflect2.TypeOf(dst)
-	ptrType := typ.(*reflect2.UnsafePtrType)
-
-	copier := CopierOf(ptrType.Elem())
-	ptr := reflect2.PtrOf(dst)
-	copier.Copy(src, ptr)
+	c = createCopierOfEface(typ)
+	if c != nil {
+		return c
+	}
+	c = createCopierOfiface(typ)
+	if c != nil {
+		return c
+	}
+	c = createCopierOfArray(typ)
+	if c != nil {
+		return c
+	}
 	return nil
 }
