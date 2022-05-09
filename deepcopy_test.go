@@ -20,7 +20,6 @@ func TestCopy(t *testing.T) {
 }
 
 func TestCopyParallel(t *testing.T) {
-	t.Parallel()
 	go func() {
 		for i := 0; i < 100; i++ {
 			b := Basics{}
@@ -34,7 +33,7 @@ func TestCopyParallel(t *testing.T) {
 		for i := 0; i < 100; i++ {
 			b := BasicsJson{}
 			err := DeepCopy(&srcJson, &b)
-			assert.Equal(t, src, b)
+			assert.Equal(t, srcJson, b)
 			assert.Nil(t, err)
 		}
 	}()
