@@ -1,6 +1,10 @@
 # DeepCopy
 [![codecov](https://codecov.io/gh/wangsquirrel/deepcopy/branch/main/graph/badge.svg?token=ZPW283W4QV)](https://codecov.io/gh/wangsquirrel/deepcopy)
 
+---
+
+Deep copy most of the golang types except `unsafe.Pointer` and `chan` with good performance
+
 ## Usage
 
 ```golang

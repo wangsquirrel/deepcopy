@@ -33,3 +33,11 @@ func TestChanCopy(t *testing.T) {
 	DeepCopy(&a, &b)
 	assert.Equal(t, a, b)
 }
+
+func TestUintptrCopy(t *testing.T) {
+	x := 1
+	a := uintptr(unsafe.Pointer(&x))
+	var b uintptr
+	DeepCopy(&a, &b)
+	assert.Equal(t, a, b)
+}
